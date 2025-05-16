@@ -15,31 +15,34 @@
       color: #333;
       scroll-behavior: smooth;
       display: flex;
+      flex-direction: column;
     }
 
     .navbar {
-      width: 250px;
+      width: 100%;
       background-color: #2c3e50;
-      padding: 20px;
+      padding: 10px;
       color: white;
       position: fixed;
       top: 0;
       left: 0;
-      height: 100vh;
       z-index: 1000;
-      overflow-y: auto;
       display: flex;
-      flex-direction: column;
+      flex-wrap: wrap;
+      justify-content: space-around;
     }
 
     .navbar a {
       color: white;
       text-decoration: none;
       font-weight: 500;
-      padding: 12px;
-      margin-bottom: 10px;
+      padding: 10px;
+      margin: 5px;
       border-radius: 8px;
       transition: all 0.3s ease;
+      flex: 1 1 auto;
+      text-align: center;
+      font-size: 0.9em;
     }
 
     .navbar a:hover {
@@ -53,18 +56,24 @@
       font-weight: bold;
     }
 
-    @media screen and (max-width: 768px) {
+    @media screen and (min-width: 769px) {
       .navbar {
-        position: relative;
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        flex-wrap: wrap;
-        padding: 10px;
+        width: 250px;
+        height: 100vh;
+        flex-direction: column;
+        justify-content: flex-start;
+        padding: 20px;
+      }
+
+      .navbar a {
+        font-size: 1em;
+        margin-bottom: 10px;
+        text-align: left;
       }
 
       .dashboard-content {
-        margin-left: 0;
+        margin-left: 270px;
+        padding: 20px;
       }
     }
 
@@ -89,7 +98,7 @@
     }
 
     #home h1 {
-      font-size: 3em;
+      font-size: 2.5em;
       margin: 0;
       animation: fadeIn 1s ease-in;
     }
@@ -99,6 +108,7 @@
       margin-top: 0.5em;
       height: 30px;
       animation: fadeIn 1.2s ease-in;
+      font-size: 1.2em;
     }
 
     .caption {
@@ -106,6 +116,7 @@
       margin-top: 0.8em;
       font-style: italic;
       animation: fadeIn 1.4s ease-in;
+      font-size: 0.9em;
     }
 
     .cta-button {
@@ -119,9 +130,9 @@
 
     .section {
       display: none;
-      max-width: 1000px;
-      margin: 2em auto;
-      padding: 1.5em 2em;
+      max-width: 100%;
+      margin: 1em;
+      padding: 1em;
       background: white;
       border-radius: 10px;
       box-shadow: 0 2px 8px rgba(0,0,0,0.05);
@@ -137,12 +148,12 @@
     }
 
     .section-header {
-      font-size: 1.2em;
+      font-size: 1.1em;
       font-weight: bold;
       background-color: #ecf0f1;
       padding: 0.4em 0.6em;
       border-radius: 6px;
-      margin: 1em 0 0.5em;
+      margin: 0.5em 0;
       cursor: pointer;
     }
 
@@ -166,8 +177,9 @@
     }
 
     th, td {
-      padding: 0.8em;
+      padding: 0.5em;
       text-align: center;
+      font-size: 0.9em;
     }
 
     tr:nth-child(even) {
@@ -176,54 +188,54 @@
 
     .summary-box {
       display: flex;
-      gap: 1em;
-      margin-top: 1em;
+      gap: 0.5em;
+      margin-top: 0.5em;
       flex-wrap: wrap;
     }
 
     .summary-item {
       flex: 1;
       background: #ecf0f1;
-      padding: 1em;
+      padding: 0.5em;
       border-radius: 8px;
       text-align: center;
       font-weight: bold;
-      min-width: 150px;
+      min-width: 120px;
+      font-size: 0.9em;
     }
 
     footer {
       text-align: center;
-      padding: 1.5em;
+      padding: 1em;
       background-color: #2c3e50;
       color: white;
-      position: fixed;
-      bottom: 0;
       width: 100%;
+      margin-top: auto;
     }
 
     pre {
       background-color: #f0f0f0;
-      padding: 1em;
+      padding: 0.5em;
       border-radius: 6px;
       overflow-x: auto;
+      font-size: 0.9em;
     }
 
     .dashboard-content {
-      margin-left: 270px;
-      padding: 20px;
+      padding: 70px 10px 20px;
       flex-grow: 1;
     }
 
     .chart-container {
-      margin: 20px 0;
+      margin: 10px 0;
       border: 1px solid #ddd;
-      padding: 20px;
+      padding: 10px;
     }
 
     .predict-container {
       background: white;
-      padding: 2rem;
-      border-radius: 15px;
+      padding: 1rem;
+      border-radius: 10px;
       box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
 
@@ -247,17 +259,17 @@
     <a href="#" onclick="event.preventDefault(); showSection('models')">📊 Models</a>
     <a href="#" onclick="event.preventDefault(); showSection('code')">💻 Code</a>
     <a href="#" onclick="event.preventDefault(); showSection('predictions')">📦 Predictions</a>
-    <a href="https://github.com/yourusername/delivery-predictor" target="_blank">📁 GitHub</a>
+    <a href="https://github.com/Morriskarani/Revolutionizing-E-Commerce-A-Machine-Learning-Powered-Delivery-Time-Predictor" target="_blank">📁 GitHub</a>
   </div>
 
-  <header id="home" class="section active">
-    <h1>📦 Revolutionising E-Commerce</h1>
-    <h2 id="dynamicText"></h2>
-    <div class="caption">Visualizing Delivery Patterns Across Regions</div>
-    <a href="#" onclick="event.preventDefault(); showSection('predict')" class="btn btn-primary mt-3 cta-button">Try Predictions Now</a>
-  </header>
-
   <div class="dashboard-content">
+    <header id="home" class="section active">
+      <h1>📦 Revolutionising E-Commerce</h1>
+      <h2 id="dynamicText"></h2>
+      <div class="caption">Visualizing Delivery Patterns Across Regions</div>
+      <a href="#" onclick="event.preventDefault(); showSection('predict')" class="btn btn-primary mt-3 cta-button">Try Predictions Now</a>
+    </header>
+
     <section id="predict" class="section">
       <div class="section-header open"><i class="fas fa-truck"></i> Predict Delivery Time</div>
       <div class="section-content predict-container" style="display: block;">
@@ -400,7 +412,7 @@ model.fit(X_train, y_train)</code></pre>
       const target = document.getElementById(id);
       if (target) {
         target.classList.add('active');
-        target.scrollIntoView({ behavior: 'smooth' });
+        window.scrollTo({ top: target.offsetTop - 60, behavior: 'smooth' });
       }
 
       const navLinks = document.querySelectorAll('.navbar a');
@@ -415,7 +427,6 @@ model.fit(X_train, y_train)</code></pre>
       if (content) content.style.display = header.classList.contains('open') ? 'block' : 'none';
     }
 
-    // Handle form submission with AJAX
     const predictForm = document.querySelector('#predict form');
     if (predictForm) {
       predictForm.addEventListener('submit', async function(event) {
@@ -480,7 +491,6 @@ model.fit(X_train, y_train)</code></pre>
       });
     }
 
-    // Initialize chart
     document.addEventListener('DOMContentLoaded', function() {
       const ctx = document.getElementById('accuracyChart');
       if (ctx) {
@@ -515,7 +525,6 @@ model.fit(X_train, y_train)</code></pre>
       }
     });
 
-    // Dynamic Text
     const dynamicText = document.getElementById('dynamicText');
     if (dynamicText) {
       let phrases = ["Predicting Delivery Times", "Optimizing Logistics", "Enhancing Customer Satisfaction"];
@@ -526,7 +535,6 @@ model.fit(X_train, y_train)</code></pre>
       }, 3000);
     }
 
-    // Set initial active state
     const homeLink = document.querySelector('.navbar a[onclick="event.preventDefault(); showSection(\'home\')"]');
     if (homeLink) homeLink.classList.add('active');
   </script>
