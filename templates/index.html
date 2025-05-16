@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>🚚 Delivery Predictor Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: #f4f8fb;
+      color: #333;
+      scroll-behavior: smooth;
+      display: flex;
+    }
+
+    .navbar {
+      width: 250px;
+      background-color: #2c3e50;
+      padding: 20px;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 100vh;
+      z-index: 1000;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .navbar a {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      padding: 12px;
+      margin-bottom: 10px;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+    }
+
+    .navbar a:hover {
+      background-color: #34495e;
+      transform: scale(1.05);
+      box-shadow: 0 0 8px rgba(255,255,255,0.6);
+    }
+
+    .navbar a.active {
+      background-color: #1abc9c;
+      font-weight: bold;
+    }
+
+    @media screen and (max-width: 768px) {
+      .navbar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 10px;
+      }
+
+      .dashboard-content {
+        margin-left: 0;
+      }
+    }
+
+    #home {
+      height: 100vh;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.3)), url('{{ url_for('static', filename='images/truck one.jpg') }}') center center/cover no-repeat;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      color: white;
+      text-align: center;
+      padding: 2em;
+      box-sizing: border-box;
+      flex-grow: 1;
+      position: relative;
+    }
+
+    #home > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    #home h1 {
+      font-size: 3em;
+      margin: 0;
+      animation: fadeIn 1s ease-in;
+    }
+
+    #home h2 {
+      font-weight: 400;
+      margin-top: 0.5em;
+      height: 30px;
+      animation: fadeIn 1.2s ease-in;
+    }
+
+    .caption {
+      color: #ddd;
+      margin-top: 0.8em;
+      font-style: italic;
+      animation: fadeIn 1.4s ease-in;
+    }
+
+    .cta-button {
+      animation: fadeIn 1.6s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .section {
+      display: none;
+      max-width: 1000px;
+      margin: 2em auto;
+      padding: 1.5em 2em;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+    }
+
+    .section.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .section-header {
+      font-size: 1.2em;
+      font-weight: bold;
+      background-color: #ecf0f1;
+      padding: 0.4em 0.6em;
+      border-radius: 6px;
+      margin: 1em 0 0.5em;
+      cursor: pointer;
+    }
+
+    .section-content {
+      display: none;
+      margin-top: 0.5em;
+    }
+
+    .section-header.open + .section-content {
+      display: block;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1em;
+    }
+
+    table, th, td {
+      border: 1px solid #ccc;
+    }
+
+    th, td {
+      padding: 0.8em;
+      text-align: center;
+    }
+
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .summary-box {
+      display: flex;
+      gap: 1em;
+      margin-top: 1em;
+      flex-wrap: wrap;
+    }
+
+    .summary-item {
+      flex: 1;
+      background: #ecf0f1;
+      padding: 1em;
+      border-radius: 8px;
+      text-align: center;
+      font-weight: bold;
+      min-width: 150px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 1.5em;
+      background-color: #2c3e50;
+      color: white;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+    }
+
+    pre {
+      background-color: #f0f0f0;
+      padding: 1em;
+      border-radius: 6px;
+      overflow-x: auto;
+    }
+
+    .dashboard-content {
+      margin-left: 270px;
+      padding: 20px;
+      flex-grow: 1;
+    }
+
+    .chart-container {
+      margin: 20px 0;
+      border: 1px solid #ddd;
+      padding: 20px;
+    }
+
+    .predict-container {
+      background: white;
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .prediction-result ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    .prediction-result ul li {
+      margin: 5px 0;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <a href="#" onclick="event.preventDefault(); showSection('home')" class="active">🏠 Home</a>
+    <a href="{{ url_for('visualizations') }}">📊 Dashboard</a>
+    <a href="#" onclick="event.preventDefault(); showSection('predict')">🛍️ Predict Delivery</a>
+    <a href="{{ url_for('dataset') }}" class="btn btn-outline-primary">📊 View Dataset</a>
+    <a href="#" onclick="event.preventDefault(); showSection('about')">ℹ️ About</a>
+    <a href="#" onclick="event.preventDefault(); showSection('models')">📊 Models</a>
+    <a href="#" onclick="event.preventDefault(); showSection('code')">💻 Code</a>
+    <a href="#" onclick="event.preventDefault(); showSection('predictions')">📦 Predictions</a>
+    <a href="https://github.com/yourusername/delivery-predictor" target="_blank">📁 GitHub</a>
+  </div>
+
+  <header id="home" class="section active">
+    <h1>📦 Revolutionising E-Commerce</h1>
+    <h2 id="dynamicText"></h2>
+    <div class="caption">Visualizing Delivery Patterns Across Regions</div>
+    <a href="#" onclick="event.preventDefault(); showSection('predict')" class="btn btn-primary mt-3 cta-button">Try Predictions Now</a>
+  </header>
+
+  <div class="dashboard-content">
+    <section id="predict" class="section">
+      <div class="section-header open"><i class="fas fa-truck"></i> Predict Delivery Time</div>
+      <div class="section-content predict-container" style="display: block;">
+        <h2 class="text-center mb-4">🚀 Delivery Prediction Form</h2>
+        <form method="POST" action="{{ url_for('predict') }}" class="row g-3">
+          <div class="col-md-6">
+            <label for="warehouse_block" class="form-label">Warehouse Block</label>
+            <select name="warehouse_block" id="warehouse_block" class="form-select" required>
+              <option value="">Select</option>
+              <option value="F">F</option>
+              <option value="D">D</option>
+              <option value="A">A</option>
+              <option value="B">B</option>
+              <option value="C">C</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="shipment_mode" class="form-label">Mode of Shipment</label>
+            <select name="shipment_mode" id="shipment_mode" class="form-select" required>
+              <option value="">Select</option>
+              <option value="Flight">Flight</option>
+              <option value="Road">Road</option>
+              <option value="Ship">Ship</option>
+            </select>
+          </div>
+          <div class="col-md-6">
+            <label for="customer_calls" class="form-label">Customer Care Calls</label>
+            <input type="number" name="customer_calls" id="customer_calls" class="form-control" required min="0">
+          </div>
+          <div class="col-md-6">
+            <label for="customer_rating" class="form-label">Customer Rating</label>
+            <input type="number" name="customer_rating" id="customer_rating" class="form-control" required min="1" max="5">
+          </div>
+          <div class="col-md-6">
+            <label for="prior_purchases" class="form-label">Prior Purchases</label>
+            <input type="number" name="prior_purchases" id="prior_purchases" class="form-control" required min="0">
+          </div>
+          <div class="col-md-6">
+            <label for="discount_offered" class="form-label">Discount Offered</label>
+            <input type="number" name="discount_offered" id="discount_offered" class="form-control" required min="0">
+          </div>
+          <div class="col-md-12">
+            <label for="weight_in_gms" class="form-label">Weight (grams)</label>
+            <input type="number" name="weight_in_gms" id="weight_in_gms" class="form-control" required min="0">
+          </div>
+          <div class="col-12 text-center">
+            <button type="submit" class="btn btn-primary mt-3">Predict Delivery</button>
+          </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="about" class="section">
+      <div class="section-header open" onclick="toggleCollapse(this)">📌 Abstract</div>
+      <div class="section-content" style="display: block;">
+        <p>This project aims to predict on-time delivery of e-commerce products using machine learning, analyzing customer behavior and shipping logistics.</p>
+      </div>
+      <div class="section-header" onclick="toggleCollapse(this)">🎯 Problem Statement</div>
+      <div class="section-content">
+        <p>Delayed deliveries affect customer satisfaction and business reputation. We aim to predict delivery status based on order features and recommend logistics improvements.</p>
+      </div>
+      <div class="section-header" onclick="toggleCollapse(this)">🏁 Objectives</div>
+      <div class="section-content">
+        <ul>
+          <li>Analyze historical delivery data</li>
+          <li>Identify patterns causing delays</li>
+          <li>Train predictive models to classify delivery status</li>
+          <li>Deploy insights via a dashboard</li>
+        </ul>
+      </div>
+      <div class="section-header" onclick="toggleCollapse(this)">🧾 Dataset Description</div>
+      <div class="section-content">
+        <p>The dataset includes product type, customer location, shipping mode, order time, and delivery status. Cleaned and encoded before modeling.</p>
+      </div>
+      <div class="section-header" onclick="toggleCollapse(this)">🛠️ Tech Stack</div>
+      <div class="section-content">
+        <ul>
+          <li>Python (Pandas, Sklearn, Matplotlib, Flask)</li>
+          <li>HTML/CSS/JavaScript</li>
+          <li>Streamlit (for alternate dashboard view)</li>
+        </ul>
+      </div>
+      <div class="section-header" onclick="toggleCollapse(this)">👨‍💻 My Contribution</div>
+      <div class="section-content">
+        <p>Built the ML models, handled preprocessing, created the dashboard and wrote all the backend logic in Flask.</p>
+      </div>
+      <div class="section-header" onclick="toggleCollapse(this)">⚠️ Limitations</div>
+      <div class="section-content">
+        <p>Accuracy is limited by data imbalance and missing fields. Real-world generalization may require broader datasets.</p>
+      </div>
+      <div class="section-header" onclick="toggleCollapse(this)">🚀 Future Work</div>
+      <div class="section-content">
+        <p>Implement live tracking, more advanced ML models like XGBoost, and add real-time delivery alerts.</p>
+      </div>
+    </section>
+
+    <section id="models" class="section">
+      <div class="section-header open"><i class="fas fa-chart-bar"></i> Model Accuracy Comparison</div>
+      <div class="section-content" style="display: block;">
+        <canvas id="accuracyChart" width="600" height="300"></canvas>
+      </div>
+    </section>
+
+    <section id="code" class="section">
+      <div class="section-header open"><i class="fas fa-code"></i> Sample Code Snippet</div>
+      <div class="section-content" style="display: block;">
+        <pre><code>from sklearn.tree import DecisionTreeClassifier
+model = DecisionTreeClassifier()
+model.fit(X_train, y_train)</code></pre>
+      </div>
+    </section>
+
+    <section id="predictions" class="section">
+      <div class="section-header open"><i class="fas fa-truck"></i> Prediction Results</div>
+      <div class="section-content" style="display: block;">
+        <table>
+          <thead>
+            <tr>
+              <th>Timestamp</th>
+              <th>Predicted Delivery Status</th>
+              <th>Actual Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Predictions appended via AJAX -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <p>🚚 AI-Powered Delivery Predictor - All Rights Reserved</p>
+  </footer>
+
+  <script>
+    function showSection(id) {
+      const sections = document.querySelectorAll('.section');
+      sections.forEach(section => section.classList.remove('active'));
+      const target = document.getElementById(id);
+      if (target) {
+        target.classList.add('active');
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
+
+      const navLinks = document.querySelectorAll('.navbar a');
+      navLinks.forEach(link => link.classList.remove('active'));
+      const activeLink = document.querySelector(`.navbar a[onclick="event.preventDefault(); showSection('${id}')"]`);
+      if (activeLink) activeLink.classList.add('active');
+    }
+
+    function toggleCollapse(header) {
+      header.classList.toggle('open');
+      const content = header.nextElementSibling;
+      if (content) content.style.display = header.classList.contains('open') ? 'block' : 'none';
+    }
+
+    // Handle form submission with AJAX
+    const predictForm = document.querySelector('#predict form');
+    if (predictForm) {
+      predictForm.addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        const submitButton = document.querySelector('#predict form button[type="submit"]');
+        submitButton.disabled = true;
+        submitButton.innerHTML = 'Predicting... <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>';
+
+        try {
+          const response = await fetch('/predict', {
+            method: 'POST',
+            body: formData
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to process prediction. Please try again.');
+          }
+
+          const result = await response.json();
+          const resultDiv = document.createElement('div');
+          const alertClass = result.prediction === 'On Time' ? 'alert-success' : 'alert-warning';
+          resultDiv.className = `mt-4 alert ${alertClass} text-center prediction-result`;
+          resultDiv.innerHTML = `<h4>Prediction Result: ${result.prediction}</h4>`;
+
+          if (result.reasons && result.reasons.length > 0) {
+            const reasonsList = document.createElement('ul');
+            result.reasons.forEach(reason => {
+              const li = document.createElement('li');
+              li.textContent = reason;
+              reasonsList.appendChild(li);
+            });
+            resultDiv.appendChild(reasonsList);
+          }
+
+          const clearButton = document.createElement('button');
+          clearButton.className = 'btn btn-secondary mt-2';
+          clearButton.textContent = 'Clear Result';
+          clearButton.onclick = () => resultDiv.remove();
+          resultDiv.appendChild(clearButton);
+
+          const existingResult = document.querySelector('#predict .prediction-result');
+          if (existingResult) existingResult.remove();
+
+          const predictContent = document.querySelector('#predict .section-content');
+          if (predictContent) predictContent.appendChild(resultDiv);
+
+          const predictionsTable = document.querySelector('#predictions table tbody');
+          if (predictionsTable) {
+            const newRow = document.createElement('tr');
+            newRow.innerHTML = `<td>${new Date().toLocaleString()}</td><td>${result.prediction}</td><td>-</td>`;
+            predictionsTable.appendChild(newRow);
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert(`Prediction failed: ${error.message}`);
+        } finally {
+          submitButton.disabled = false;
+          submitButton.innerHTML = 'Predict Delivery';
+        }
+      });
+    }
+
+    // Initialize chart
+    document.addEventListener('DOMContentLoaded', function() {
+      const ctx = document.getElementById('accuracyChart');
+      if (ctx) {
+        new Chart(ctx.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['Decision Tree', 'Random Forest', 'Logistic Regression', 'KNN'],
+            datasets: [{
+              label: 'Model Accuracy (%)',
+              data: [69, 78, 82, 80],
+              backgroundColor: ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f'],
+              borderColor: ['#2980b9', '#c0392b', '#27ae60', '#f39c12'],
+              borderWidth: 1
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    return `${context.dataset.label}: ${context.parsed.y}% accuracy`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    });
+
+    // Dynamic Text
+    const dynamicText = document.getElementById('dynamicText');
+    if (dynamicText) {
+      let phrases = ["Predicting Delivery Times", "Optimizing Logistics", "Enhancing Customer Satisfaction"];
+      let i = 0;
+      setInterval(() => {
+        dynamicText.textContent = phrases[i];
+        i = (i + 1) % phrases.length;
+      }, 3000);
+    }
+
+    // Set initial active state
+    const homeLink = document.querySelector('.navbar a[onclick="event.preventDefault(); showSection(\'home\')"]');
+    if (homeLink) homeLink.classList.add('active');
+  </script>
+</body>
+</html>

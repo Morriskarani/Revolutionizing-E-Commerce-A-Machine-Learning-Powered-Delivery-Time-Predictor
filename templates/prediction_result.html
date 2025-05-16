@@ -1,0 +1,55 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prediction Result</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <style>
+        body {
+            background: linear-gradient(to right, #e3f2fd, #ffffff);
+            font-family: 'Segoe UI', sans-serif;
+        }
+        .container {
+            max-width: 700px;
+            margin-top: 60px;
+            padding: 30px;
+            border-radius: 15px;
+            background-color: #ffffff;
+            box-shadow: 0px 0px 15px rgba(0,0,0,0.1);
+        }
+        .alert-info {
+            font-size: 1.2rem;
+        }
+        h1, h3 {
+            color: #007bff;
+        }
+        ul li {
+            font-size: 1.05rem;
+            margin-bottom: 10px;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center mb-4">🚚 Delivery Prediction Result</h1>
+        <div class="alert alert-info text-center">
+            <strong>📦 Prediction:</strong> The delivery is expected to arrive <strong>{{ prediction_result }}</strong>.
+        </div>
+
+        <h3 class="mt-4">🔍 Why this prediction?</h3>
+        <ul>
+            {% for reason in reasons %}
+                <li>👉 {{ reason }}</li>
+            {% endfor %}
+        </ul>
+        <div class="text-center">
+            <a href="/" class="btn btn-primary mt-4 px-4 py-2">🔁 Make Another Prediction</a>
+        </div>
+    </div>
+</body>
+</html>
+

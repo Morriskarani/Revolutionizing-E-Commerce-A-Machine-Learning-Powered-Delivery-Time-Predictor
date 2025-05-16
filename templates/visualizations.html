@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>📊 Dashboard Visualizations</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .navbar {
+            background-color: #333;
+            color: white;
+            padding: 10px;
+            text-align: center;
+        }
+        .navbar a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+        .container {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-top: 20px;
+        }
+        h1 {
+            color: #333;
+            font-size: 28px;
+        }
+        h2 {
+            color: #555;
+            font-size: 24px;
+        }
+        .chart-container {
+            margin: 20px 0;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .chart-container h3 {
+            font-size: 20px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <div class="navbar">
+        <a href="/">Home</a>
+        <a href="/visualizations">Visualizations</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="container">
+        <h1>📊 Dashboard Visualizations</h1>
+        <h2>Explore your data insights through visualizations</h2>
+      
+        <!-- Show all charts -->
+        <div class="chart-container">
+            <h3>Cost Distribution</h3>
+            <div>{{ chart_html1 | safe }}</div>
+        </div>
+  
+        <div class="chart-container">
+            <h3>Product Importance Share</h3>
+            <div>{{ chart_html2 | safe }}</div>
+        </div>
+  
+        <div class="chart-container">
+            <h3>Cost vs Weight</h3>
+            <div>{{ chart_html3 | safe }}</div>
+        </div>
+  
+        <div class="chart-container">
+            <h3>Discount vs Customer Rating</h3>
+            <div>{{ chart_html4 | safe }}</div>
+        </div>
+  
+        <div class="chart-container">
+            <h3>Correlation Heatmap</h3>
+            <div>{{ chart_html5 | safe }}</div>
+        </div>
+    </div>
+</body>
+</html>
