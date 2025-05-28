@@ -308,9 +308,12 @@
             <input type="number" name="prior_purchases" id="prior_purchases" class="form-control" required min="0">
           </div>
           <div class="col-md-6">
-            <label for="discount_offered" class="form-label">Discount Offered</label>
-            <input type="number" name="discount_offered" id="discount_offered" class="form-control" required min="0">
-          </div>
+    <label for="discount_offered" class="form-label">Discount Offered (%)</label>
+    <div class="input-group">
+        <input type="number" name="discount_offered" id="discount_offered" class="form-control" required min="0" max="100" placeholder="e.g., 10 for 10%">
+        <span class="input-group-text">%</span>
+    </div>
+</div>
           <div class="col-md-12">
             <label for="weight_in_gms" class="form-label">Weight (grams)</label>
             <input type="number" name="weight_in_gms" id="weight_in_gms" class="form-control" required min="0">
@@ -500,7 +503,7 @@ model.fit(X_train, y_train)</code></pre>
             labels: ['Decision Tree', 'Random Forest', 'Logistic Regression', 'KNN'],
             datasets: [{
               label: 'Model Accuracy (%)',
-              data: [69, 78, 82, 80],
+              data: [69, 68.45, 67, 65],
               backgroundColor: ['#3498db', '#e74c3c', '#2ecc71', '#f1c40f'],
               borderColor: ['#2980b9', '#c0392b', '#27ae60', '#f39c12'],
               borderWidth: 1
